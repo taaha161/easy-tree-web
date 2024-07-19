@@ -62,8 +62,8 @@ export default defineNuxtConfig({
 
 
   compatibilityDate: "2024-07-14",
-  serverHandlers: [
-    { route: '/api', handler: '~/server/middleware/cors.js' },
-  ],
+  // serverHandlers: [
+  //   { route: '/*', handler: '~/server/middleware/cors.js' },
+  // ],
 });
 
