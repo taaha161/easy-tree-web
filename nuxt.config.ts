@@ -56,7 +56,7 @@ export default defineNuxtConfig({
     }
   },
   routeRules: {
-    '/*': {
+    '/**': {
         proxy: { to: "https://easy-rate-links.vercel.app/**", },
     }
   },
