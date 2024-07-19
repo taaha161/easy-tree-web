@@ -89,8 +89,7 @@ export const useUserStore = defineStore("user", {
     async login(email, password) {
       this.loading = true; // Set loading to true
       try {
-        const res = await useFetch("/user/login", 
-  
+        const res = await useFetch("/user/login",
           {
           email: email,
           password: password,

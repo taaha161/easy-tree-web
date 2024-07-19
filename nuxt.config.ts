@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   modules: [
     "nuxt-icon",
     "nuxt-lodash",
-    "nuxt-helm",
+
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "@vite-pwa/nuxt",
