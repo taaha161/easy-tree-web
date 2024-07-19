@@ -74,7 +74,7 @@
 import { useUserStore } from '~~/stores/user'
 const userStore = useUserStore()
 const showDropdown = ref(false);
-const selectedLink = ref(userStore.currentEasyLink || '');
+const selectedLink = ref(userStore.currentEasyLink || 'Select a Link');
 
 const currentLinks = computed(() => {
     const selectedLinkId = userStore.currentEasyLink ? userStore.currentEasyLink._id : null;
