@@ -73,7 +73,7 @@ export const useUserStore = defineStore("user", {
     async login(email, password) {
       this.loading = true; // Set loading to true
       try {
-        const { data, error } = await useFetch('/user/login', {
+        const { data, error } = await useFetch('https://scan.easyrate.dk/user/login', {
           method: 'POST',
           body: { email, password },
         });
@@ -92,7 +92,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async logout() {
-      await useFetch('/user/logout', {
+      await useFetch('https://scan.easyrate.dk/user/logout', {
         method: 'POST',
         body: { refreshToken: this.refreshToken },
       });
@@ -101,7 +101,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async refreshUser() {
-      const { data } = await useFetch('/user/refresh', {
+      const { data } = await useFetch('https://scan.easyrate.dk/user/refresh', {
         method: 'POST',
         body: { refreshToken: this.refreshToken },
       });
@@ -115,7 +115,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async getAllLinks() {
-      const { data } = await useFetch('/user/getEasylinks', {
+      const { data } = await useFetch('https://scan.easyrate.dk/user/getEasylinks', {
         headers: { Authorization: `Bearer ${this.accessToken}` },
       });
 
@@ -124,7 +124,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async addLink(url, name, id) {
-      await useFetch('/user/createLinks', {
+      await useFetch('https://scan.easyrate.dk/user/createLinks', {
         method: 'POST',
         body: [
           {
@@ -138,7 +138,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async updateLink(id, desc) {
-      await useFetch('/user/updateEasylink', {
+      await useFetch('https://scan.easyrate.dk/user/updateEasylink', {
         method: 'PUT',
         body: { _id: id, desc },
         headers: { Authorization: `Bearer ${this.accessToken}` },
@@ -146,7 +146,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async deleteLink(_id) {
-      await useFetch('/user/deleteLinks', {
+      await useFetch('https://scan.easyrate.dk/user/deleteLinks', {
         method: 'DELETE',
         body: [{ _id }],
         headers: { Authorization: `Bearer ${this.accessToken}` },
