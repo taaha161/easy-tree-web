@@ -21,6 +21,7 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.7",
     "axios": "^1.7.2",
+    "cors": "^2.8.5",
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.0",

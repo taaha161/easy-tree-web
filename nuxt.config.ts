@@ -15,6 +15,8 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  
+  
 
   modules: [
     "nuxt-icon",
@@ -59,7 +61,9 @@ export default defineNuxtConfig({
 
 
 
-  compatibilityDate: "2024-07-14"
-
+  compatibilityDate: "2024-07-14",
+  serverHandlers: [
+    { route: '/api', handler: '~/server/middleware/cors.js' },
+  ],
 });
 
