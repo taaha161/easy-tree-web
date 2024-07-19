@@ -63,7 +63,7 @@ module.exports = {
     return [
       {
         // matching all API routes
-        source: "https://scan.easyrate.dk/:path",
+        source: "scan.easyrate.dk/:path",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" },
