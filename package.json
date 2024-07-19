@@ -24,6 +24,7 @@
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.0",
+    "nuxt-helm": "^0.0.2",
     "nvm": "^0.0.4",
     "pinia": "^2.0.33",
     "vue-advanced-cropper": "^2.8.8"

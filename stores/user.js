@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { method } from "lodash";
 import axios from "~~/plugins/axios";
 import { defineStore } from "pinia";
 
@@ -89,7 +89,9 @@ export const useUserStore = defineStore("user", {
     async login(email, password) {
       this.loading = true; // Set loading to true
       try {
-        const res = await $axios.post("/user/login", {
+        const res = await useFetch("/user/login", 
+  
+          {
           email: email,
           password: password,
         });

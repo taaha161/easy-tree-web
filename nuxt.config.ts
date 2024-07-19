@@ -19,6 +19,7 @@ export default defineNuxtConfig({
   modules: [
     "nuxt-icon",
     "nuxt-lodash",
+    "nuxt-helm",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "@vite-pwa/nuxt",
@@ -55,11 +56,7 @@ export default defineNuxtConfig({
       viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
     }
   },
-  routeRules: {
-    '/**': {
-        proxy: { to: "https://easy-rate-links.vercel.app/**", },
-    }
-  },
+
 
 
   compatibilityDate: "2024-07-14"
