@@ -1,172 +1,211 @@
-import { defineStore } from 'pinia'
-import axios from '~~/plugins/axios'
+import _ from "lodash";
+import axios from "~~/plugins/axios";
+import { defineStore } from "pinia";
 
-const $axios = axios().provide.axios
+const $axios = axios().provide.axios;
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    id: '',
-    theme_id: '',
-    name: '',
-    email: '',
-    image: '',
-    bio: '',
-    theme: null,
-    colors: null,
-    allLinks: null,
-    isMobile: false,
-    updatedLinkId: 0,
-    addLinkOverlay: false,
-    isPreviewOverlay: false,
-  }),
+const initialState = {
+  id: "",
+  theme_id: "",
+  name: "",
+  email: "",
+  image: "",
+  bio: "",
+  theme: null,
+  colors: null,
+  allEasyLinks: null,
+  allLinks: null,
+  isMobile: false,
+  refreshToken: "",
+  accessToken: "",
+  updatedLinkId: 0,
+  addLinkOverlay: false,
+  isPreviewOverlay: false,
+  currentEasyLink: null,
+  loading: false, // Added loading state
+};
+
+export const useUserStore = defineStore("user", {
+  state: () => initialState,
   actions: {
     hidePageOverflow(val, id) {
       if (val) {
-        document.body.style.overflow = 'hidden'
+        document.body.style.overflow = "hidden";
         if (id) {
-          document.getElementById(id).style.overflow  = 'hidden'
+          document.getElementById(id).style.overflow = "hidden";
         }
-        return
+        return;
       }
-      document.body.style.overflow = 'visible'
+      document.body.style.overflow = "visible";
       if (id) {
-        document.getElementById(id).style.overflow  = 'visible'
+        document.getElementById(id).style.overflow = "visible";
       }
     },
 
     allLowerCaseNoCaps(str) {
-      return str.split(' ').join('').toLowerCase()
+      return str.split(" ").join("").toLowerCase();
     },
 
     async hasSessionExpired() {
-      await $axios.interceptors.response.use((response) => {
-        // Call was successful, continue.
-        return response;
-      }, (error) => {
+      await $axios.interceptors.response.use(
+        (response) => {
+          // Call was successful, continue.
+          return response;
+        },
+        (error) => {
           switch (error.response.status) {
-              case 401: // Not logged in
-              case 419: // Session expired
-              case 503: // Down for maintenance
-                  // Bounce the user to the login screen with a redirect back
-                  this.resetState()
-                  window.location.href = '/';
-                  break;
-              case 500:
-                  alert('Oops, something went wrong!  The team has been notified.');
-                  break;
-              default:
-                  // Allow individual requests to handle other errors
-                  return Promise.reject(error);
+            case 401: // Not logged in
+            case 419:
+              this.refreshUser(); // Session expired
+            case 503: // Down for maintenance
+              // Bounce the user to the login screen with a redirect back
+              this.resetState();
+              window.location.href = "/";
+              break;
+            case 500:
+              alert("Oops, something went wrong!  The team has been notified.");
+              break;
+            default:
+              // Allow individual requests to handle other errors
+              return Promise.reject(error);
           }
-      });
+        }
+      );
     },
 
-    async getTokens() {
-      await $axios.get('/sanctum/csrf-cookie')
-    },
+    // async getTokens() {
+    //   await $axios.get('/sanctum/csrf-cookie')
+    // },
+
+    // async register(name, email, password, confirmPassword) {
+    //   await $axios.post('/register', {
+    //     name: name,
+    //     email: email,
+    //     password: password,
+    //     password_confirmation: confirmPassword
+    //   })
+    // },
 
     async login(email, password) {
-      await $axios.post('/login', {
-        email: email,
-        password: password
-      })
-    },
-
-    async register(name, email, password, confirmPassword) {
-      await $axios.post('/register', {
-        name: name,
-        email: email,
-        password: password,
-        password_confirmation: confirmPassword
-      })
-    },
-
-    async getUser() {
-      let res = await $axios.get('/api/users')
-      
-      this.$state.id = res.data.id
-      this.$state.theme_id = res.data.theme_id
-      this.$state.name = res.data.name
-      this.$state.bio = res.data.bio
-      this.$state.image = res.data.image
-
-      this.getUserTheme()
-    },
-
-    async updateUserImage(data) {
-      await $axios.post('/api/user-image', data)
-    },
-
-    async updateLinkImage(data) {
-      await $axios.post(`/api/link-image`, data)
-    },
-
-    async deleteLink(id) {
-      await $axios.delete(`/api/links/${id}`)
-    },
-
-    getUserTheme() {
-      this.$state.colors.forEach(color => {
-        if (this.$state.theme_id === color.id) {
-          this.$state.theme = color
-        }
-      })
-    },
-
-    async updateUserDetails(name, bio) {
-      await $axios.patch(`/api/users/${this.$state.id}`, {
-        name: name,
-        bio: bio
-      })
-    },
-
-    async updateTheme(themeId) {
-      let res = await $axios.patch('/api/themes', {
-        theme_id: themeId,
-      })
-      this.$state.theme_id = res.data.theme_id
-      this.getUserTheme()
-    },
-
-    async getAllLinks() {
-      let res = await $axios.get('/api/links')
-      this.$state.allLinks = res.data
-    },
-
-    async addLink(name, url) {
-      await $axios.post('/api/links', {
-        name: name,
-        url: url
-      })
-    },
-
-    async updateLink(id, name, url) {
-      await $axios.patch(`/api/links/${id}`, {
-        name: name,
-        url: url
-      })
+      this.loading = true; // Set loading to true
+      try {
+        const res = await $axios.post("/user/login", {
+          email: email,
+          password: password,
+        });
+        this.refreshToken = res.data.refreshToken;
+        this.accessToken = res.data.accessToken;
+      } catch (error) {
+        throw error;
+      } finally {
+        this.loading = false; // Set loading to false
+      }
     },
 
     async logout() {
-      await $axios.post('/logout')
-      this.resetState()
+      await $axios.post("/user/logout", {
+        refreshToken: this.refreshToken,
+      });
+      this.resetState();
     },
 
-    resetState() {      
-      this.$state.id = ''
-      this.$state.name = ''
-      this.$state.email = ''
-      this.$state.image = ''
-      this.$state.bio = ''
-      this.$state.theme_id = ''
-      this.$state.theme = null
-      this.$state.colors = null
-      this.$state.allLinks = null
-      this.$state.isMobile = false
-      this.$state.updatedLinkId = 0
-      this.$state.addLinkOverlay = false
-      this.$state.isPreviewOverlay = false
+    async refreshUser() {
+      let res = await $axios.post("/user/refresh", {
+        refreshToken: this.refreshToken,
+      });
+      this.refreshToken = res.data.refreshToken;
+      this.accessToken = res.data.accessToken;
+    },
+    updateCurrentLink(easyLink){
+      this.currentEasyLink = easyLink;
+    },
+
+    // async getUser() {
+    //   let res = await $axios.get('/api/users')
+
+    //   this.id = res.data.id
+    //   this.theme_id = res.data.theme_id
+    //   this.name = res.data.name
+    //   this.bio = res.data.bio
+    //   this.image = res.data.image
+
+    //   this.getUserTheme()
+    // },
+
+    // getUserTheme() {
+    //   this.colors.forEach(color => {
+    //     if (this.theme_id === color.id) {
+    //       this.theme = color
+    //     }
+    //   })
+    // },
+
+    // async updateUserImage(data) {
+    //   await $axios.post('/api/user-image', data)
+    // },
+
+    // async updateLinkImage(data) {
+    //   await $axios.post(`/api/link-image`, data)
+    // },
+
+    // async updateUserDetails(name, bio) {
+    //   await $axios.patch(`/api/users/${this.id}`, {
+    //     name: name,
+    //     bio: bio
+    //   })
+    // },
+
+    // async updateTheme(themeId) {
+    //   let res = await $axios.patch('/api/themes', {
+    //     theme_id: themeId,
+    //   })
+    //   this.theme_id = res.data.theme_id
+    //   this.getUserTheme()
+    // },
+
+    async getAllLinks() {
+      let res = await $axios.get("/user/getEasylinks", {
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      });
+      this.allEasyLinks = res.data.easylinks;
+      this.allLinks = _.groupBy(res.data.links, "easyLinkId");
+    },
+
+    async addLink(url, name, id) {
+      await $axios.post(
+        "/user/createLinks",
+
+        [{
+          easyLinkId: id,
+          linkName: name,
+          url: url
+        },],
+        { headers: { Authorization: `Bearer ${this.accessToken}` } }
+      );
+    },
+
+    async updateLink(id, desc) {
+      await $axios.put(
+        `/user/updateEasylink`,
+        { _id: id, desc },
+        { headers: { Authorization: `Bearer ${this.accessToken}` } }
+      );
+    },
+
+    async deleteLink(_id) {
+      await $axios.delete(`/user/deleteLinks`, {
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+        data: [{ _id }],
+      });
+      // await $axios.delete(`/user/deleteEasylink`, {
+      //   headers: { Authorization: `Bearer ${this.accessToken}` },
+      //   data: [{ _id }],
+      // });
+    },
+
+    resetState() {
+      _.merge(this, initialState);
     },
   },
-  persist: true
-})
+  persist: true,
+});

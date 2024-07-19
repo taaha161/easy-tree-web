@@ -31,14 +31,15 @@
                     <button
                         type="submit"
                         class="rounded-full w-full p-3 font-bold"
-                        :disabled="(!email || !password) "
+                        :disabled="(!email || !password) || isLoading"
                         :class="
-                            (email && password) 
+                            (email && password && !isLoading) 
                                 ? 'bg-[#8228D9] hover:bg-[#6c21b3] text-white' 
                                 : 'bg-[#EFF0EB] text-[#A7AAA2]'
                         "
                     >
-                        Log in
+                        <span v-if="isLoading">Loading...</span>
+                        <span v-else>Log in</span>
                     </button>
                 </div>
             </form>
@@ -57,32 +58,34 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import AuthLayout from '~/layouts/AuthLayout.vue';
 
 import { useUserStore } from '~~/stores/user';
-const userStore = useUserStore()
+const userStore = useUserStore();
 
-const router = useRouter()
+const router = useRouter();
 
-definePageMeta({ middleware: 'is-logged-in' })
+// definePageMeta({ middleware: 'is-logged-in' })
 
-let email = ref(null)
-let password = ref(null)
-let errors = ref(null)
+let email = ref(null);
+let password = ref(null);
+let errors = ref(null);
+const isLoading = ref(false);
 
 const login = async () => {
-    errors.value = null
+    errors.value = null;
+    isLoading.value = true;
 
     try {
-        await userStore.getTokens()
-        await userStore.login(email.value, password.value)
-        await userStore.getUser()
-        await userStore.getAllLinks()
-        router.push('/admin')
+        await userStore.login(email.value, password.value);
+        await userStore.getAllLinks();
+        router.push('/admin');
     } catch (error) {
-        console.log(error)
-        errors.value = error.response.data.errors
+        errors.value = error.response.data.errors;
+        console.log(error);
+    } finally {
+        isLoading.value = false;
     }
-}
-
+};
 </script>

@@ -32,12 +32,11 @@
                         ]"
                     />
 
-                    <div v-for="link in userStore.allLinks" class="mt-4">
+                    <div v-for="link in currentLinks" class="mt-4">
                         <LinkBox 
                             v-if="link"
                             :link="link" 
-                            :selectedId="selectedInput.id"
-                            :selectedStr="selectedInput.str"
+
                             @updatedInput="updatedInput"
                             class="mt-6" 
                         />
@@ -45,8 +44,12 @@
 
                 </div>
             </div>
+            <
+
+          
 
             <MobileSectionDisplay />
+            
 
         </div>
     </AdminLayout>
@@ -57,9 +60,9 @@ import AdminLayout from '~~/layouts/AdminLayout.vue';
 import { useUserStore } from '~~/stores/user'
 const userStore = useUserStore()
 
-definePageMeta({ middleware: 'is-logged-out' })
+//definePageMeta({ middleware: 'is-logged-out' })
 
-let selectedInput = ref({ id: 0, str: '' })
+let selectedInput = ref({ id: '', str: '' })
 let showAddLink = ref(false)
 
 const updatedInput = (e) => {
@@ -74,4 +77,8 @@ const showAddLinkFunc = () => {
         showAddLink.value = true
     }
 }
+const currentLinks = computed(() => {
+    const selectedLinkId = userStore.currentEasyLink ? userStore.currentEasyLink._id : null;
+    return selectedLinkId ? userStore.allLinks[selectedLinkId] || [] : [];
+});
 </script>

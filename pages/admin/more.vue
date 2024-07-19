@@ -31,7 +31,7 @@ const router = useRouter()
 
 let windowWidth = ref(window.innerWidth)
 
-definePageMeta({ middleware: 'is-logged-out' })
+//definePageMeta({ middleware: 'is-logged-out' })
 
 onMounted(() => {
     window.addEventListener('resize', function () {
