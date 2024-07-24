@@ -1,3 +1,5 @@
+
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   pages: true,
@@ -7,20 +9,27 @@ export default defineNuxtConfig({
     payloadExtraction: false
   },
 
+
   css: ['~/assets/css/main.css'],
 
   postcss: {
     plugins: {
+      
       tailwindcss: {},
       autoprefixer: {},
     },
   },
+  plugins: [
+    { src: '~/plugins/color-picker.client.js', mode: 'client' }
+  ],
+
   
   
 
   modules: [
     "nuxt-icon",
     "nuxt-lodash",
+
 
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
@@ -51,6 +60,7 @@ export default defineNuxtConfig({
       type: "module",
     },
   },
+
 
   app: {
     head: {

@@ -16,6 +16,7 @@
                         inputType="email"
                         :error="errors && errors.email ? errors.email[0] : ''"
                     />
+                    <p v-if="errors && errors.email" class="text-red-500">{{ errors.email[0] }}</p>
                 </div>
 
                 <div class="mt-4">
@@ -25,6 +26,7 @@
                         inputType="password"
                         :error="errors && errors.password ? errors.password[0] : ''"
                     />
+                    <p v-if="errors && errors.password" class="text-red-500">{{ errors.password[0] }}</p>
                 </div>
 
                 <div class="mt-10">
@@ -82,7 +84,7 @@ const login = async () => {
         await userStore.getAllLinks();
         router.push('/admin');
     } catch (error) {
-        errors.value = error.response.data.errors;
+        errors.value = error;
         console.log(error);
     } finally {
         isLoading.value = false;

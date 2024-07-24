@@ -10,11 +10,19 @@ const initialState = {
   bio: "",
   theme: null,
   colors: null,
+  bgColor: "#ffffff",
+  textColor: "#000000",
+  andetColor: "#ffffff",
+  buttonColor: "#000000",
   allEasyLinks: null,
   allLinks: null,
   isMobile: false,
   refreshToken: "",
   accessToken: "",
+  facebook: "",
+  instagram: "",
+  linkedIn : "",
+  tikTok: "",
   updatedLinkId: 0,
   addLinkOverlay: false,
   isPreviewOverlay: false,
@@ -90,6 +98,18 @@ export const useUserStore = defineStore("user", {
         this.loading = false; // Set loading to false
       }
     },
+    decimalToHex(decimal) {
+      // Convert decimal to hexadecimal string
+      let hex = decimal.toString(16).toLowerCase();
+  
+      // Pad with leading zeros if necessary to ensure it's six digits
+      while (hex.length < 6) {
+          hex = '0' + hex;
+      }
+  
+      // Append '#' at the start
+      return '#' + hex;
+  },
 
     async logout() {
       await useFetch('https://scan.easyrate.dk/user/logout', {
@@ -113,13 +133,27 @@ export const useUserStore = defineStore("user", {
     updateCurrentLink(easyLink){
       this.currentEasyLink = easyLink;
     },
+    updateColors(easyLink){
+      this.bgColor =   this.decimalToHex(easyLink.bgColor); 
+      this.textColor = this.decimalToHex(easyLink.textColor);
+      this.andetColor = this.decimalToHex(easyLink.andetColor);
+      this.buttonColor =  this.decimalToHex(easyLink.buttonColor);   
+
+    },
 
     async getAllLinks() {
       const { data } = await useFetch('https://scan.easyrate.dk/user/getEasylinks', {
         headers: { Authorization: `Bearer ${this.accessToken}` },
       });
 
-      this.allEasyLinks = data.value.easylinks;
+      this.allEasyLinks = data.value.easylinks.map(link => ({
+        ...link,
+        bgColor: this.decimalToHex(link.bgColor),
+        textColor: this.decimalToHex(link.textColor),
+        buttonColor: this.decimalToHex(link.buttonColor),
+        andetColor: this.decimalToHex(link.andetColor),
+      }));
+     
       this.allLinks = _.groupBy(data.value.links, 'easyLinkId');
     },
 
@@ -135,6 +169,15 @@ export const useUserStore = defineStore("user", {
         ],
         headers: { Authorization: `Bearer ${this.accessToken}` },
       });
+    },
+
+    async updateColors (id, bgColor, textColor, andetColor, buttonColor){
+      await useFetch('https://scan.easyrate.dk/user/updateEasylink', {
+        method: 'PUT',
+        body: { _id: id, bgColor : bgColor, textColor: textColor, andetColor: andetColor, buttonColor: buttonColor },
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      });
+
     },
 
     async updateLink(id, desc) {

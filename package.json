@@ -10,8 +10,10 @@
   },
   "devDependencies": {
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
+    "@types/tinycolor2": "^1.4.6",
     "@vite-pwa/nuxt": "^0.0.7",
     "autoprefixer": "^10.4.14",
+    "consola": "^3.2.3",
     "nuxt": "^3.3.1",
     "nuxt-icon": "^0.3.3",
     "nuxt-lodash": "^2.4.1",
@@ -19,8 +21,10 @@
     "tailwindcss": "^3.2.7"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@pinia/nuxt": "^0.4.7",
     "axios": "^1.7.2",
+    "color-mode": "^0.1.0",
     "cors": "^2.8.5",
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
@@ -28,7 +32,9 @@
     "nuxt-helm": "^0.0.2",
     "nvm": "^0.0.4",
     "pinia": "^2.0.33",
-    "vue-advanced-cropper": "^2.8.8"
+    "vue-advanced-cropper": "^2.8.8",
+    "vue-color": "^2.8.1",
+    "vue3-colorpicker": "^2.3.0"
   },
   "engines": {
     "node": "18.x"
