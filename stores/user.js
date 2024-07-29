@@ -170,6 +170,29 @@ export const useUserStore = defineStore("user", {
         headers: { Authorization: `Bearer ${this.accessToken}` },
       });
     },
+    async addEasyLink(name, bgColor, textColor, buttonColor, andetColor) {
+      console.log(easyLinkURI);
+      console.log(bgColor);
+
+      try{
+      await useFetch('https://scan.easyrate.dk/user/createEasyLink', {
+        method: 'POST',
+        body: 
+          {
+            easyLinkURI: name,
+            bgColor: bgColor,
+        textColor: textColor,
+        buttonColor:buttonColor,
+        andetColor: andetColor,
+
+          },
+        
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      });}
+      catch(e){
+        console.log(e);
+      }
+    },
 
     async updateColors (id, bgColor, textColor, andetColor, buttonColor){
       await useFetch('https://scan.easyrate.dk/user/updateEasylink', {
@@ -184,6 +207,20 @@ export const useUserStore = defineStore("user", {
       await useFetch('https://scan.easyrate.dk/user/updateEasylink', {
         method: 'PUT',
         body: { _id: id, desc },
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      });
+    },
+    async updateEasyLinkName(id, name) {
+      await useFetch('https://scan.easyrate.dk/user/updateEasylink', {
+        method: 'PUT',
+        body: { _id: id, easyLinkURI: name },
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      });
+    },
+    async deleteEasyLink(_id) {
+      await useFetch('https://scan.easyrate.dk/user/deleteEasylink', {
+        method: 'DELETE',
+        body: [{ _id }],
         headers: { Authorization: `Bearer ${this.accessToken}` },
       });
     },
