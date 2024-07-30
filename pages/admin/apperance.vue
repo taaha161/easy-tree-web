@@ -112,12 +112,42 @@ watch(buttonColor, (newColor) => {
 watch(andetColor, (newColor) => {
   userStore.currentEasyLink.andetColor = newColor;
 });
+
+watch(
+  () => userStore.currentEasyLink?.bgColor,
+  (newColor) => {
+    bgColor.value = newColor || '#ffffff';
+  }
+);
+
+watch(
+  () => userStore.currentEasyLink?.textColor,
+  (newColor) => {
+    textColor.value = newColor || '#000000';
+  }
+);
+
+watch(
+  () => userStore.currentEasyLink?.buttonColor,
+  (newColor) => {
+    buttonColor.value = newColor || '#000000';
+  }
+);
+
+watch(
+  () => userStore.currentEasyLink?.andetColor,
+  (newColor) => {
+    andetColor.value = newColor || '#000000';
+  }
+);
+
 watch(
   () => userStore.currentEasyLink?.images?.logo,
   (newLogo) => {
     logoImage.value = newLogo || "";
   }
 );
+
 
 watch(
   () => userStore.currentEasyLink?.images?.background,
