@@ -78,6 +78,91 @@ export const useUserStore = defineStore("user", {
       );
     },
 
+    async deleteImage(type, easyLinkId) {
+      this.loading = true;
+    
+      try {
+        const response = await useFetch('https://scan.easyrate.dk/user/deleteEasylinkImage', {
+          method: 'DELETE',
+          headers: {
+           // 'Content-Type': 'application/json', // Set content type for JSON body
+            Authorization: `Bearer ${this.accessToken}`
+          },
+          body: {
+            type: type,
+            easyLinkId: easyLinkId
+          }
+        });
+    
+        // if (!response.ok) {
+        //   throw new Error(`Error: ${response.statusText}`);
+        // }
+    
+        console.log('Image deleted successfully');
+    
+        // Optionally, you can handle the success case here, like updating local state
+    
+      } catch (e) {
+        console.error('Error deleting previous image:', e.message || e);
+        throw e;
+      } finally {
+        this.loading = false;
+      }
+    }
+,    
+
+    async uploadImage(type, easyLinkId, imageFile) {
+      this.loading = true;
+      const formData = new FormData();
+      formData.append('type', type);
+      formData.append('easyLinkId', easyLinkId);
+      formData.append('image', imageFile);
+    
+      try {
+
+        const response = await fetch('https://scan.easyrate.dk/user/upload', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`
+          }
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+    
+        // Construct the new image URL
+        const mimeType = imageFile.type.split('/')[1];
+        const newImageUrl = `https://scan.easyrate.dk/easylink-images/${easyLinkId}/${type}/${type}.${mimeType}`;
+        console.log('New Image URL:', newImageUrl);
+    
+        // Update allEasyLinks
+        const easyLinkIndex = this.allEasyLinks.findIndex(link => link._id === easyLinkId);
+        if (easyLinkIndex !== -1) {
+          // Use dynamic property names to correctly assign the image URL
+          this.allEasyLinks[easyLinkIndex].images[type] = newImageUrl;
+        }
+    
+        // Update currentEasyLink
+        if (!this.currentEasyLink.images) {
+          this.currentEasyLink.images = {};
+        }
+        // Use dynamic property names to correctly assign the image URL
+        this.currentEasyLink.images[type] = newImageUrl;
+    
+      } catch (e) {
+        console.error('Error uploading image:', e.message || e);
+        throw e;
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    
+
+
+
     async login(email, password) {
       this.loading = true; // Set loading to true
       try {

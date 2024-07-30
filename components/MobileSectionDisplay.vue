@@ -1,6 +1,7 @@
 <template>
   <div class="md:block hidden fixed right-0 lg:w-[500px] w-[310px] h-[calc(100%-20px)] mt-[20px] mx-auto border-l border-l-gray-300 pt-20 overflow-auto">
     <div>
+      <!-- Dropdown and Add New Link Form -->
       <button @click="toggleDropdown"
         class="flex items-center justify-center w-full py-2 rounded-full text-white font-semibold"
         :class="['bg-[#8228D9]', 'hover:bg-[#6c21b3]', userStore.isMobile ? 'mt-6 text-lg' : 'mt-8 md:mt-6']">
@@ -53,13 +54,13 @@
       </div>
     </div>
 
-    <div :style="{ backgroundColor: bgColor }" class="mx-auto mt-16 mb-16 flex items-center justify-center w-full lg:max-w-[230px] max-w-[200px] lg:h-[460px] h-[400px] p-3 rounded-3xl relative">
+    <div :style="{ backgroundColor: bgColor, backgroundImage: `url(${backgroundImage})` }" class="mx-auto mt-16 mb-16 flex items-center justify-center w-full lg:max-w-[230px] max-w-[200px] lg:h-[460px] h-[400px] p-3 rounded-3xl relative">
       <img class="absolute z-10 pointer-events-none select-none" src="~/assets/images/mobile-case.png" alt="Mobile Case">
 
       <div class="w-full h-full absolute lg:max-w-[225px] max-w-[195px] rounded-3xl z-0" />
 
       <div class="h-full mx-auto w-full overflow-auto z-10">
-        <img v-if="userStore.currentEasyLink?.images" class="rounded-full min-w-[60px] w-[60px] mx-auto mt-8" :src="userStore.currentEasyLink?.images.logo" alt="Selected Link Image">
+        <img v-if="userStore.currentEasyLink?.images?.logo && userStore.currentEasyLink?.images?.logo != ''" class="rounded-full min-w-[60px] w-[60px] mx-auto mt-8" :src="logoImage" alt="Selected Link Image">
 
         <div :style="{ color: textColor }" class="text-center text-sm font-semibold mt-4 break-words">
           <span>{{ selectedLink || 'Select a link' }}</span>
@@ -108,7 +109,6 @@
 
 <script setup>
 import '@fortawesome/fontawesome-free/css/all.css';
-
 import { ref, watch, computed } from 'vue';
 import { useUserStore } from '~~/stores/user';
 
@@ -117,10 +117,13 @@ const showDropdown = ref(false);
 const showAddLinkForm = ref(false);
 const selectedLink = ref(userStore.currentEasyLink?.easyLinkURI || 'Select a Link');
 
+// Initialize colors and images from userStore
 const bgColor = ref(userStore.currentEasyLink?.bgColor || '#ffffff');
 const textColor = ref(userStore.currentEasyLink?.textColor || '#000000');
 const buttonColor = ref(userStore.currentEasyLink?.buttonColor || '#000000');
 const andetColor = ref(userStore.currentEasyLink?.andetColor || '#000000');
+const logoImage = ref(userStore.currentEasyLink?.images.logo || "");
+const backgroundImage = ref(userStore.currentEasyLink?.images.background || "");
 
 const newLink = ref({
   easyLinkURI: '',
@@ -163,6 +166,21 @@ watch(
   }
 );
 
+watch(
+  () => userStore.currentEasyLink?.images.logo,
+  (newLogo) => {
+    logoImage.value = newLogo || "";
+  }
+);
+
+watch(
+  () => userStore.currentEasyLink?.images.background,
+  (newBackground) => {
+    console.log(newBackground);
+    backgroundImage.value = newBackground || "";
+  }
+);
+
 function toggleDropdown() {
   showDropdown.value = !showDropdown.value;
 }
@@ -175,11 +193,13 @@ function selectLink(link) {
   selectedLink.value = link.easyLinkURI;
   userStore.updateCurrentLink(link);
 
-  // Update colors based on selected link
+  // Update colors and images based on selected link
   bgColor.value = userStore.currentEasyLink.bgColor || '#ffffff';
   textColor.value = userStore.currentEasyLink.textColor || '#000000';
   buttonColor.value = userStore.currentEasyLink.buttonColor || '#000000';
   andetColor.value = userStore.currentEasyLink.andetColor || '#000000';
+  logoImage.value = userStore.currentEasyLink.images.logo || "";
+  backgroundImage.value = userStore.currentEasyLink.images.background || "";
 
   showDropdown.value = false;
 }
@@ -191,9 +211,10 @@ async function editLink(link) {
     await userStore.updateEasyLinkName(link._id, newEasyLinkURI);
   }
 }
+
 const hexToDecimal = (hex) => {
-    return hex ? parseInt(hex.replace('#', ''), 16) : 0;
-  };
+  return hex ? parseInt(hex.replace('#', ''), 16) : 0;
+};
 
 async function deleteLink(link) {
   if (confirm("Are you sure you want to delete this link?")) {
@@ -205,6 +226,7 @@ async function deleteLink(link) {
     }
   }
 }
+
 async function addLink() {
   try {
     const { easyLinkURI, bgColor, textColor, buttonColor, andetColor } = newLink.value;
@@ -230,16 +252,12 @@ async function addLink() {
     showDropdown.value = true;
   } catch (error) {
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
       console.error('Error response data:', error.response.data);
       console.error('Error response status:', error.response.status);
       console.error('Error response headers:', error.response.headers);
     } else if (error.request) {
-      // The request was made but no response was received
       console.error('Error request data:', error.request);
     } else {
-      // Something happened in setting up the request that triggered an Error
       console.error('Error message:', error.message);
     }
     console.error('Error config:', error.config);
@@ -247,6 +265,7 @@ async function addLink() {
 }
 
 </script>
+
 
 <style scoped>
 .icon-button {
