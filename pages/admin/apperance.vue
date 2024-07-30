@@ -86,12 +86,12 @@ import { useUserStore } from '~~/stores/user';
 
 const userStore = useUserStore();
 const successMessage = ref('');
-const bgColor = ref(userStore.currentEasyLink.bgColor || '#ffffff');
-const textColor = ref(userStore.currentEasyLink.textColor || '#000000');
-const buttonColor = ref(userStore.currentEasyLink.buttonColor || '#000000');
-const andetColor = ref(userStore.currentEasyLink.andetColor || '#000000');
-const logoImage = ref(userStore.currentEasyLink?.images.logo || "");
-const backgroundImage = ref(userStore.currentEasyLink?.images.background || "");
+const bgColor = ref(userStore.currentEasyLink?.bgColor || '#ffffff');
+const textColor = ref(userStore.currentEasyLink?.textColor || '#000000');
+const buttonColor = ref(userStore.currentEasyLink?.buttonColor || '#000000');
+const andetColor = ref(userStore.currentEasyLink?.andetColor || '#000000');
+const logoImage = ref(userStore.currentEasyLink?.images?.logo || "");
+const backgroundImage = ref(userStore.currentEasyLink?.images?.background || "");
 
 const hexToDecimal = (hex) => {
   return hex ? parseInt(hex.replace('#', ''), 16) : 0;
@@ -113,14 +113,14 @@ watch(andetColor, (newColor) => {
   userStore.currentEasyLink.andetColor = newColor;
 });
 watch(
-  () => userStore.currentEasyLink?.images.logo,
+  () => userStore.currentEasyLink?.images?.logo,
   (newLogo) => {
     logoImage.value = newLogo || "";
   }
 );
 
 watch(
-  () => userStore.currentEasyLink?.images.background,
+  () => userStore.currentEasyLink?.images?.background,
   (newBackground) => {
     console.log(newBackground);
     backgroundImage.value = newBackground || "";

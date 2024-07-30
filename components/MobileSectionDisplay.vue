@@ -122,8 +122,8 @@ const bgColor = ref(userStore.currentEasyLink?.bgColor || '#ffffff');
 const textColor = ref(userStore.currentEasyLink?.textColor || '#000000');
 const buttonColor = ref(userStore.currentEasyLink?.buttonColor || '#000000');
 const andetColor = ref(userStore.currentEasyLink?.andetColor || '#000000');
-const logoImage = ref(userStore.currentEasyLink?.images.logo || "");
-const backgroundImage = ref(userStore.currentEasyLink?.images.background || "");
+const logoImage = ref(userStore.currentEasyLink?.images?.logo || "");
+const backgroundImage = ref(userStore.currentEasyLink?.images?.background || "");
 
 const newLink = ref({
   easyLinkURI: '',
@@ -167,14 +167,14 @@ watch(
 );
 
 watch(
-  () => userStore.currentEasyLink?.images.logo,
+  () => userStore.currentEasyLink?.images?.logo,
   (newLogo) => {
     logoImage.value = newLogo || "";
   }
 );
 
 watch(
-  () => userStore.currentEasyLink?.images.background,
+  () => userStore.currentEasyLink?.images?.background,
   (newBackground) => {
     console.log(newBackground);
     backgroundImage.value = newBackground || "";
@@ -198,8 +198,8 @@ function selectLink(link) {
   textColor.value = userStore.currentEasyLink.textColor || '#000000';
   buttonColor.value = userStore.currentEasyLink.buttonColor || '#000000';
   andetColor.value = userStore.currentEasyLink.andetColor || '#000000';
-  logoImage.value = userStore.currentEasyLink.images.logo || "";
-  backgroundImage.value = userStore.currentEasyLink.images.background || "";
+  logoImage.value = userStore.currentEasyLink.images?.logo || "";
+  backgroundImage.value = userStore.currentEasyLink.images?.background || "";
 
   showDropdown.value = false;
 }
