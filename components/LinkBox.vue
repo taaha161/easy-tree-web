@@ -19,6 +19,9 @@
             <Icon @click="startEditingLink" class="cursor-pointer min-w-[17px]"
               :class="isMobile ? 'min-w-[23px]' : 'min-w-[17px]'" name="octicon:pencil-24"
               :size="isMobile ? '23' : '17'" color="#676B5F" />
+            <Icon @click="isDelete = true" class="cursor-pointer min-w-[17px] ml-2"
+              :class="isMobile ? 'min-w-[23px]' : 'min-w-[17px]'" name="mdi:delete" 
+              :size="isMobile ? '23' : '17'" color="#FF0000" />
           </div>
         </div>
       </div>
