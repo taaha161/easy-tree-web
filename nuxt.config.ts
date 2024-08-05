@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     { src: '~/plugins/color-picker.client.js', mode: 'client' }
   ],
 
+
   
   
 
@@ -37,6 +38,8 @@ export default defineNuxtConfig({
   ],
 
   pwa: {
+    
+
     manifest: {
       name: "Linktree Clone",
       short_name: "Linktree Clone",
@@ -59,6 +62,18 @@ export default defineNuxtConfig({
       enabled: true,
       type: "module",
     },
+    workbox: {
+      // Successfully precaches other assets:
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      // Try to Runtime Cache the home page:
+      runtimeCaching: [{
+        urlPattern: "/",
+        handler: 'NetworkFirst',
+      }]
+      // Don't use navigationFallback because "/" isn't in our precache manfiest:
+      // navigationFallback: '/'
+    },
+
   },
 
 
