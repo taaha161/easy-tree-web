@@ -70,9 +70,12 @@ export default defineNuxtConfig({
       // Successfully precaches other assets:
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
       // Try to Runtime Cache the home page:
+      
+
       runtimeCaching: [{
-        urlPattern: "/",
+        urlPattern: "/admin",
         handler: 'NetworkFirst',
+        method: "GET"
       }],
       // Don't use navigationFallback because "/" isn't in our precache manfiest:
        navigateFallback: undefined
