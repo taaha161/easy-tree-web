@@ -4,6 +4,8 @@
 export default defineNuxtConfig({
   pages: true,
 
+  
+
 
   experimental: {
     payloadExtraction: false
@@ -38,9 +40,11 @@ export default defineNuxtConfig({
   ],
 
   pwa: {
+  
     
 
     manifest: {
+    
       name: "Linktree Clone",
       short_name: "Linktree Clone",
       description: "This is a Linktree Clone",
@@ -69,10 +73,11 @@ export default defineNuxtConfig({
       runtimeCaching: [{
         urlPattern: "/",
         handler: 'NetworkFirst',
-      }]
+      }],
       // Don't use navigationFallback because "/" isn't in our precache manfiest:
-      // navigationFallback: '/'
+       navigateFallback: undefined
     },
+  
 
   },
 
