@@ -14,7 +14,7 @@
 
 
                 <TextInput class="w-full" placeholder="Link Name" v-model:input="linkName" inputType="text"
-                    :error="errors && errors.desc ? errors.desc[0] : ''" />
+                    :error="errors && errors.linkName ? errors.linkName[0] : ''" />
 
                 <div class="py-1" />
 
@@ -51,7 +51,7 @@ const addLink = async (e) => {
         setTimeout(() => {
             emit('close')
             url.value = ''
-            desc.value = ''
+            linkName.value = ''
         }, 100)
     } catch (error) {
         console.log(error)

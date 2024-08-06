@@ -243,6 +243,10 @@ export const useUserStore = defineStore("user", {
     },
 
     async addLink(url, name, id) {
+      try{
+        console.log(id);
+        console.log(name);
+        console.log(url);
       await useFetch('https://scan.easyrate.dk/user/createLinks', {
         method: 'POST',
         body: [
@@ -250,10 +254,15 @@ export const useUserStore = defineStore("user", {
             easyLinkId: id,
             linkName: name,
             url: url,
+            size : "small",
+            placement : 0
           },
         ],
         headers: { Authorization: `Bearer ${this.accessToken}` },
-      });
+      });}catch(error){
+
+        console.log(error);
+      }
     },
     async addEasyLink(name, bgColor, textColor, buttonColor, andetColor) {
       console.log(easyLinkURI);

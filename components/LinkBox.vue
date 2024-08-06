@@ -184,7 +184,7 @@ const updateLinkOnClick = async () => {
     };
 
     addLink(newLink);
-    await userStore.addLink(linkUrl.value, link.value.name, userStore.currentEasyLink._id);
+    await userStore.addLink(linkUrl.value, link.value.linkName, userStore.currentEasyLink._id);
 
     isEditingLink.value = false;
   } catch (error) {
